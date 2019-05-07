@@ -8,12 +8,10 @@
           v-model="userInput"
           @keyup.enter="addNewTodo()">
           <div class="list-group">
-            <template>
               <button class="list-group-item text-left"
-              v-for="todo in todoList">
-                {{ todo }}
+              v-for="todo in activeTodoList()" @click="toggleTodoState(todo)">
+                {{ todo.label }}
               </button>
-            </template>
           </div>
       </div>
     </div>
@@ -31,14 +29,24 @@ export default {
     };
   },
   methods: {
+    activeTodoList() {
+      return this.todoList.filter(todo => todo.state === 'active');
+    },
     addNewTodo() {
       if (this.userInput == '') {
         return;
       } else {
-        this.todoList.push(this.userInput);
+        this.todoList.push({
+          label: this.userInput,
+          state: 'active'
+        });
         this.userInput = '';
         return;
       }
+    },
+    toggleTodoState(todo) {
+      todo.state = (todo.state === 'active' ? 'done': 'active');
+      return;
     }
   }
 }
